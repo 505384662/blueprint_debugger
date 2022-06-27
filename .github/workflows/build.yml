@@ -59,7 +59,7 @@ jobs:
     needs: [build]
     runs-on: [ubuntu-18.04]
     env:
-      GITHUB_TOKEN: ${{ secrets.SKYNET_BLUPRINT_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.BLUPRINT_GITHUB_TOKEN }}
     steps:
       - name: Download
         uses: actions/download-artifact@v2
@@ -117,4 +117,4 @@ jobs:
             darwin-arm64/darwin-arm64.zip
             darwin-x64/darwin-x64.zip
             linux-x64/linux-x64.zip
-          token: ${{ secrets.RELEASE_TOKEN }}
+          token: ${{ secrets.BLUEPRINT_RELEASE_TOKEN }}

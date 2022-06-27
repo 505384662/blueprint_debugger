@@ -1,0 +1,78 @@
+cmake_minimum_required(VERSION 3.11)
+
+project(blueprint)
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g")
+
+set(CMAKE_INSTALL_PREFIX install)
+
+set(CMAKE_CXX_STANDARD 11)
+
+set(BLUEPRINT_LUA_VERSION "54" CACHE STRING "Lua version: jit/51/52/53/54")
+
+if(${BLUEPRINT_LUA_VERSION} STREQUAL "54")
+    set(BLUEPRINT_LUA_DIR "lua-5.4.0")
+    add_definitions(-DBLUEPRINT_LUA_54)
+elseif(${BLUEPRINT_LUA_VERSION} STREQUAL "53")
+    set(BLUEPRINT_LUA_DIR "lua-5.3.5")
+    add_definitions(-DBLUEPRINT_LUA_53)
+elseif(${BLUEPRINT_LUA_VERSION} STREQUAL "52")
+    set(BLUEPRINT_LUA_DIR "lua-5.2.4")
+    add_definitions(-DBLUEPRINT_LUA_52)
+elseif(${BLUEPRINT_LUA_VERSION} STREQUAL "51")
+    set(BLUEPRINT_LUA_DIR "lua-5.1.5")
+    add_definitions(-DBLUEPRINT_LUA_51)
+elseif(${BLUEPRINT_LUA_VERSION} STREQUAL "jit")
+    set(BLUEPRINT_LUA_DIR "luajit")
+    add_definitions(-DBLUEPRINT_LUA_JIT)
+
+    # if LUAJIT support lua_setfuncs use this macro define
+    # add_definitions(-DBLUEPRINT_LUA_JIT_SUPPORT_LUA_SETFUNCS)
+endif()
+
+add_definitions(-DBLUEPRINT_CORE_VERSION="1.3.0")
+
+if(BLUEPRINT_USE_LUA_SOURCE)
+    add_definitions(-DBLUEPRINT_USE_LUA_SOURCE)
+    include_directories(
+        ${CMAKE_SOURCE_DIR}/third-party/${BLUEPRINT_LUA_DIR}/src
+    )
+
+    if(${BLUEPRINT_LUA_VERSION} STREQUAL "jit")
+    # ignore
+    else()
+        add_subdirectory(third-party/${BLUEPRINT_LUA_DIR})
+    endif()
+endif()
+
+add_subdirectory(third-party/libuv-1.29.0)
+add_subdirectory(blueprint_debugger)
+add_subdirectory(blueprint_core)
+
+if(WIN32)
+    macro(source_group_by_dir proj_dir source_files)
+        if(MSVC OR APPLE)
+            get_filename_component(sgbd_cur_dir ${proj_dir} ABSOLUTE)
+
+            foreach(sgbd_file ${${source_files}})
+                get_filename_component(sgbd_abs_file ${sgbd_file} ABSOLUTE)
+                file(RELATIVE_PATH sgbd_fpath ${sgbd_cur_dir} ${sgbd_abs_file})
+                string(REGEX REPLACE "\(.*\)/.*" \\1 sgbd_group_name ${sgbd_fpath})
+                string(COMPARE EQUAL ${sgbd_fpath} ${sgbd_group_name} sgbd_nogroup)
+                string(REPLACE "/" "\\" sgbd_group_name ${sgbd_group_name})
+
+                if(sgbd_nogroup)
+                    set(sgbd_group_name "\\")
+                endif(sgbd_nogroup)
+
+                source_group(${sgbd_group_name} FILES ${sgbd_file})
+            endforeach(sgbd_file)
+        endif(MSVC OR APPLE)
+    endmacro(source_group_by_dir)
+
+    add_subdirectory(shared)
+    add_subdirectory(blueprint_tool)
+    add_subdirectory(third-party/EasyHook)
+    add_subdirectory(blueprint_hook)
+endif(WIN32)

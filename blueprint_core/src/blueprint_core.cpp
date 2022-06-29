@@ -25,7 +25,7 @@ static const luaL_Reg lib[] = {
 	{"waitIDE", waitIDE},
 	{"breakHere", breakHere},
 	{"stop", stop},
-	{"tcpSharedListen", tcpSharedListen},
+	{"startDebugServer", startDebugServer},
 	{"addLuaState", addLuaState},
 	{nullptr, nullptr}};
 

@@ -150,7 +150,7 @@ bool BluePrintFacade::AddLuaState(lua_State *L)
 	return true;
 }
 
-bool BluePrintFacade::TcpSharedListen(lua_State *L, const std::string &host, int port, std::string &err)
+bool BluePrintFacade::StartDebugServer(lua_State *L, const std::string &host, int port, std::string &err)
 {
 	if (transporter == nullptr)
 	{

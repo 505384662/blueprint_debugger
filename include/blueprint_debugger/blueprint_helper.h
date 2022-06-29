@@ -23,7 +23,7 @@ int breakHere(lua_State *L);
 // blueprint.waitIDE(timeout: number): void
 int waitIDE(lua_State *L);
 
-int tcpSharedListen(lua_State *L);
+int startDebugServer(lua_State *L);
 
 int addLuaState(struct lua_State *L);
 

@@ -55,7 +55,7 @@ public:
 
 	bool TcpListen(lua_State *L, const std::string &host, int port, std::string &err);
 	bool AddLuaState(lua_State *L);
-	bool TcpSharedListen(lua_State *L, const std::string &host, int port, std::string &err);
+	bool StartDebugServer(lua_State *L, const std::string &host, int port, std::string &err);
 	bool TcpConnect(lua_State *L, const std::string &host, int port, std::string &err);
 	bool PipeListen(lua_State *L, const std::string &name, std::string &err);
 	bool PipeConnect(lua_State *L, const std::string &name, std::string &err);

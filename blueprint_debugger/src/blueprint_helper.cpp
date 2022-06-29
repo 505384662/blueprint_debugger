@@ -307,14 +307,14 @@ int waitIDE(lua_State *L)
 	return 0;
 }
 
-int tcpSharedListen(lua_State *L)
+int startDebugServer(lua_State *L)
 {
 	luaL_checkstring(L, 1);
 	std::string err;
 	const auto host = lua_tostring(L, 1);
 	luaL_checknumber(L, 2);
 	const auto port = lua_tointeger(L, 2);
-	const auto suc = BluePrintFacade::Get().TcpSharedListen(L, host, static_cast<int>(port), err);
+	const auto suc = BluePrintFacade::Get().StartDebugServer(L, host, static_cast<int>(port), err);
 	lua_pushboolean(L, suc);
 	if (suc)
 		return 1;
